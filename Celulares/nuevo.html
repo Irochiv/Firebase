@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nuevo Usuario</title>
+</head>
+<body>
+
+<!-- <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<script>
+  var firebaseConfig = {
+		apiKey: "AIzaSyC6KIBDdjJD2g0KTJSpZmRLbyt1Je8NqLA",
+    authDomain: "celulares-4b43a.firebaseapp.com",
+    databaseURL: "https://celulares-4b43a.firebaseio.com",
+    projectId: "celulares-4b43a",
+    storageBucket: "celulares-4b43a.appspot.com",
+    messagingSenderId: "251046457148",
+    appId: "1:251046457148:web:4e687fde20d07ea834b839"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  	//Guardar
+
+	//crear referencia a la base de datos
+var dataDB= firebase.database().ref('Telefono');
+
+function enviar()
+{
+	var codigo =  document.getElementById('codigo');
+	var nombre= document.getElementById('name');
+	var serie= document.getElementById('serie');
+
+	dataDB.child(codigo.value).set({
+			Nombre: nombre.value,
+			Serie: serie.value,
+		});
+	alert('Usuario registrado correctamente');
+}
+
+
+</script>
+<h1>Agregar nuevo Telefono</h1>
+<form action="" method="post">
+    <input id="codigo" class="input" type="text" value="" placeholder="Codigo" required /><br />
+    <input id="name" class="input" type="text" value="" placeholder="Nombre" required /><br />
+    <input id="serie" class="input" type="text" value="" placeholder="Serie" required /><br />
+  <button id="submit_button" type="submit" onclick="enviar()">Agregar</button>
+  </form>
+
+</body>
+</html>

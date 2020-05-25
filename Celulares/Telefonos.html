@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lista de Telefonos</title>
+</head>
+<body>
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+	var firebaseConfig = {
+		apiKey: "AIzaSyC6KIBDdjJD2g0KTJSpZmRLbyt1Je8NqLA",
+    authDomain: "celulares-4b43a.firebaseapp.com",
+    databaseURL: "https://celulares-4b43a.firebaseio.com",
+    projectId: "celulares-4b43a",
+    storageBucket: "celulares-4b43a.appspot.com",
+    messagingSenderId: "251046457148",
+    appId: "1:251046457148:web:4e687fde20d07ea834b839"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+var refDB = firebase.database().ref().child('Telefono');
+var usuarios={};
+ver();
+function ver()
+{
+  refDB.on('value',function(datos)
+{
+  $("tbody").children().remove();
+    telefono = datos.val();
+    // Recorremos los productos y los mostramos
+    $.each(telefono, function(indice,valor)
+    {
+        var tBody = document.getElementById('dataTable').lastElementChild;
+        var tr1 = document.createElement('tr');
+        tBody.appendChild(tr1);
+        var prevProducto='<td>'+valor.Nombre+'</td>';
+        prevProducto+='<td>'+valor.Serie+'</td>';
+        prevProducto+='<td><button type="button" class="btn btn-warning" onclick="editar(\''+indice+'\')">Editar</button></td>';
+        prevProducto+='<td><button type="button" class="btn btn-danger" onclick="borrar(\''+indice+'\')">Borrar</button></td>';
+        $(prevProducto).appendTo(tr1);
+
+    });
+
+},function(objetoError){
+    console.log('Error de lectura:'+objetoError.code);
+});
+}
+
+
+function editar(id)
+{
+    // Para pasar el ID a otro proceso lo hacemos a través de window.name
+    window.name= id;
+    // Cargamos la página editarproducto.html
+    location.assign('editar.html');
+}
+
+function borrar(id)
+{
+  if(confirm("Estas seguro pelana")==true)
+  {
+    refDB.child(id).remove();
+  }
+}
+
+function buscar(usuario)
+{
+  if(usuario!='')
+  {
+
+   refDB.orderByChild('Nombre').equalTo(usuario).limitToFirst(1).on('value',function(datos)
+    {
+      $("tbody").children().remove();
+        telefono=datos.val();
+        // Recorremos los productos y los mostramos
+        $.each(telefono, function(indice,valor)
+        {
+					var tBody = document.getElementById('dataTable').lastElementChild;
+					var tr1 = document.createElement('tr');
+					tBody.appendChild(tr1);
+					var prevProducto='<td>'+valor.Nombre+'</td>';
+					prevProducto+='<td>'+valor.Serie+'</td>';
+					prevProducto+='<td><button type="button" class="btn btn-warning" onclick="editar(\''+indice+'\')">Editar</button></td>';
+					prevProducto+='<td><button type="button" class="btn btn-danger" onclick="borrar(\''+indice+'\')">Borrar</button></td>';
+					$(prevProducto).appendTo(tr1);
+
+        });
+
+    },function(objetoError){
+     console.log('Error de lectura:'+objetoError.code);
+    });
+  }
+  else
+  {
+    ver();
+  }
+}
+
+	</script>
+<div class="container-fluid" id="listado">
+        <h1>Listado de Telefonos</h1>
+        <form action="" method="post">
+          <label> Nombre </label>
+          <input type="text" name="usuario" id="usuario">
+          <button id="submit_button" type="button" onclick="buscar(usuario.value)">Buscar  </button>
+        </form>
+
+        <br><br>
+        <table id="dataTable" border="1px" border-color="#000" width="800px">
+          <thead>
+     <th>Nombre</th><th>Serie</th><th colspan="2">Acciones</th>
+  </thead>
+	<input type="button" onclick="location.href='nuevo.html';" value="Nuevo"/>
+  <tbody></tbody>
+</table>
+    </div>
+</body>
+</html>
